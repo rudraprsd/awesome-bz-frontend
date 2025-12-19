@@ -9,11 +9,7 @@ interface BZFormProps {
 }
 
 const BZForm: React.FC<BZFormProps> = ({ onSubmit, isLoading, visualizer, error }) => {
-    const [latticeMatrix, setLatticeMatrix] = useState<string[][]>([
-        ['0', '0.5', '0.5'],
-        ['0.5', '0', '0.5'],
-        ['0.5', '0.5', '0']
-    ]);
+    const [latticeVectors, setLatticeVectors] = useState<string>('[[0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]]');
     const [kpoints, setKpoints] = useState<string>('{"GAMMA": [0, 0, 0], "X": [0.5, 0, 0.5], "L": [0.5, 0.5, 0.5], "W": [0.5, 0.25, 0.75], "K": [0.375, 0.375, 0.75]}');
     const [path, setPath] = useState<string>('["GAMMA", "X", "W", "L", "GAMMA", "K"]');
     const [config, setConfig] = useState<VisualizationConfig>({
@@ -38,30 +34,19 @@ const BZForm: React.FC<BZFormProps> = ({ onSubmit, isLoading, visualizer, error 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         try {
+            const parsedLattice = JSON.parse(latticeVectors);
             const parsedKpoints = JSON.parse(kpoints);
             const parsedPath = JSON.parse(path);
             
-            // Convert string matrix to numbers for API
-            const numericLattice = latticeMatrix.map(row => 
-                row.map(val => parseFloat(val) || 0)
-            );
-
             onSubmit({
-                lattice_vectors: numericLattice,
+                lattice_vectors: parsedLattice,
                 kpoints: parsedKpoints,
                 path: parsedPath,
                 config
             });
         } catch (error) {
-            alert('Invalid JSON format in K-Points or Path');
+            alert('Invalid JSON format in Lattice Vectors, K-Points or Path');
         }
-    };
-
-    const updateLattice = (row: number, col: number, val: string) => {
-        const newMatrix = [...latticeMatrix];
-        newMatrix[row] = [...newMatrix[row]];
-        newMatrix[row][col] = val;
-        setLatticeMatrix(newMatrix);
     };
 
     const updateConfig = (key: keyof VisualizationConfig, value: any) => {
@@ -76,20 +61,13 @@ const BZForm: React.FC<BZFormProps> = ({ onSubmit, isLoading, visualizer, error 
                     <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">Crystal Structure</h3>
                     
                     <div>
-                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Lattice Vectors (3x3 Matrix)</label>
-                        <div className="grid grid-cols-3 gap-2 bg-slate-50 p-3 rounded-xl border border-slate-100">
-                            {latticeMatrix.map((row, i) => (
-                                row.map((val, j) => (
-                                    <input
-                                        key={`${i}-${j}`}
-                                        type="text"
-                                        value={val}
-                                        onChange={(e) => updateLattice(i, j, e.target.value)}
-                                        className="w-full p-2 bg-white border border-slate-200 rounded-lg text-center font-mono text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-                                    />
-                                ))
-                            ))}
-                        </div>
+                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Lattice Vectors (3x3 Matrix)</label>
+                        <textarea
+                            value={latticeVectors}
+                            onChange={(e) => setLatticeVectors(e.target.value)}
+                            className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent h-24 font-mono text-sm transition-all"
+                            placeholder='[[0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]]'
+                        />
                     </div>
 
                     <div>
