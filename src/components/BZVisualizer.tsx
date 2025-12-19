@@ -82,8 +82,8 @@ const BZVisualizer: React.FC<BZVisualizerProps> = ({ plotData }) => {
     return (
         <PlotErrorBoundary>
             <div className="w-full h-full min-h-[700px] relative group flex flex-col">
-                {/* Custom Export Controls - Moved to Bottom Right */}
-                <div className="absolute bottom-6 right-6 z-30 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                {/* Custom Export Controls - Permanent */}
+                <div className="absolute bottom-6 right-6 z-30 flex gap-2 transition-opacity duration-300">
                     <button
                         onClick={() => handleDownload('png')}
                         className="flex items-center gap-2 px-4 py-2 bg-white/95 backdrop-blur shadow-lg border border-slate-200 rounded-xl text-xs font-bold text-slate-700 hover:bg-indigo-600 hover:text-white hover:border-indigo-600 transition-all transform hover:-translate-y-0.5 active:translate-y-0"

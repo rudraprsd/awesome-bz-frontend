@@ -4,9 +4,11 @@ import type { BZRequest, VisualizationConfig } from '../api/api';
 interface BZFormProps {
     onSubmit: (data: BZRequest) => void;
     isLoading: boolean;
+    visualizer: React.ReactNode;
+    error: string | null;
 }
 
-const BZForm: React.FC<BZFormProps> = ({ onSubmit, isLoading }) => {
+const BZForm: React.FC<BZFormProps> = ({ onSubmit, isLoading, visualizer, error }) => {
     const [latticeMatrix, setLatticeMatrix] = useState<string[][]>([
         ['0', '0.5', '0.5'],
         ['0.5', '0', '0.5'],
@@ -68,9 +70,9 @@ const BZForm: React.FC<BZFormProps> = ({ onSubmit, isLoading }) => {
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Left Column: Crystal Structure */}
-                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                {/* Column 1: Crystal Structure */}
+                <div className="lg:col-span-3 bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-6 h-full min-h-[600px]">
                     <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">Crystal Structure</h3>
                     
                     <div>
@@ -110,17 +112,42 @@ const BZForm: React.FC<BZFormProps> = ({ onSubmit, isLoading }) => {
                             placeholder='["GAMMA", "X", ...]'
                         />
                     </div>
+
+                    <button
+                        type="submit"
+                        disabled={isLoading}
+                        className={`w-full flex justify-center py-4 px-4 border border-transparent rounded-xl shadow-lg text-base font-bold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all transform active:scale-[0.98] ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    >
+                        {isLoading ? (
+                            <span className="flex items-center">
+                                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                Generating...
+                            </span>
+                        ) : 'Generate'}
+                    </button>
+
+                    {error && (
+                        <div className="mt-4 p-4 bg-rose-50 border border-rose-100 rounded-xl text-rose-700 text-xs flex gap-3">
+                            <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <p>{error}</p>
+                        </div>
+                    )}
                 </div>
 
-                {/* Right Column: Visualization Settings */}
-                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-6">
-                    <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">Visualization Settings</h3>
+                {/* Column 2: Visualization Settings */}
+                <div className="lg:col-span-3 bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-6 h-full min-h-[600px]">
+                    <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">Visual Settings</h3>
                     
-                    <div className="max-h-[500px] overflow-y-auto pr-2 custom-scrollbar space-y-6">
+                    <div className="max-h-[600px] overflow-y-auto pr-2 custom-scrollbar space-y-6">
                         {/* Faces & Edges */}
                         <div className="space-y-4">
                             <div className="flex items-center justify-between">
-                                <label className="text-sm font-medium text-gray-700">Brillouin Zone Faces</label>
+                                <label className="text-sm font-medium text-gray-700">Faces</label>
                                 <input
                                     type="checkbox"
                                     checked={config.SHOW_FACES}
@@ -129,9 +156,9 @@ const BZForm: React.FC<BZFormProps> = ({ onSubmit, isLoading }) => {
                                 />
                             </div>
                             {config.SHOW_FACES && (
-                                <div className="grid grid-cols-2 gap-4 pl-4 border-l-2 border-indigo-50">
+                                <div className="grid grid-cols-1 gap-4 pl-4 border-l-2 border-indigo-50">
                                     <div>
-                                        <label className="block text-xs text-gray-500 mb-1">Face Color</label>
+                                        <label className="block text-xs text-gray-500 mb-1">Color</label>
                                         <input
                                             type="color"
                                             value={config.FACE_COLOR}
@@ -154,7 +181,7 @@ const BZForm: React.FC<BZFormProps> = ({ onSubmit, isLoading }) => {
                                 </div>
                             )}
 
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 gap-4 pt-2">
                                 <div>
                                     <label className="block text-xs text-gray-500 mb-1">Edge Color</label>
                                     <input
@@ -182,7 +209,7 @@ const BZForm: React.FC<BZFormProps> = ({ onSubmit, isLoading }) => {
                         {/* Path Settings */}
                         <div className="space-y-4 pt-4 border-t border-gray-50">
                             <div className="flex items-center justify-between">
-                                <label className="text-sm font-medium text-gray-700">Show K-Path</label>
+                                <label className="text-sm font-medium text-gray-700">K-Path</label>
                                 <input
                                     type="checkbox"
                                     checked={config.SHOW_PATH}
@@ -191,9 +218,9 @@ const BZForm: React.FC<BZFormProps> = ({ onSubmit, isLoading }) => {
                                 />
                             </div>
                             {config.SHOW_PATH && (
-                                <div className="grid grid-cols-2 gap-4 pl-4 border-l-2 border-red-50">
+                                <div className="grid grid-cols-1 gap-4 pl-4 border-l-2 border-red-50">
                                     <div>
-                                        <label className="block text-xs text-gray-500 mb-1">Path Color</label>
+                                        <label className="block text-xs text-gray-500 mb-1">Color</label>
                                         <input
                                             type="color"
                                             value={config.PATH_COLOR}
@@ -202,7 +229,7 @@ const BZForm: React.FC<BZFormProps> = ({ onSubmit, isLoading }) => {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-xs text-gray-500 mb-1">Path Width ({config.PATH_WIDTH})</label>
+                                        <label className="block text-xs text-gray-500 mb-1">Width ({config.PATH_WIDTH})</label>
                                         <input
                                             type="range"
                                             min="1"
@@ -220,7 +247,7 @@ const BZForm: React.FC<BZFormProps> = ({ onSubmit, isLoading }) => {
                         {/* Points & Labels */}
                         <div className="space-y-4 pt-4 border-t border-gray-50">
                             <div className="flex items-center justify-between">
-                                <label className="text-sm font-medium text-gray-700">Show Points & Labels</label>
+                                <label className="text-sm font-medium text-gray-700">Points & Labels</label>
                                 <input
                                     type="checkbox"
                                     checked={config.SHOW_POINTS}
@@ -230,9 +257,9 @@ const BZForm: React.FC<BZFormProps> = ({ onSubmit, isLoading }) => {
                             </div>
                             {config.SHOW_POINTS && (
                                 <div className="space-y-4 pl-4 border-l-2 border-green-50">
-                                    <div className="grid grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 gap-4">
                                         <div>
-                                            <label className="block text-xs text-gray-500 mb-1">Point Color</label>
+                                            <label className="block text-xs text-gray-500 mb-1">Color</label>
                                             <input
                                                 type="color"
                                                 value={config.POINT_COLOR}
@@ -241,7 +268,7 @@ const BZForm: React.FC<BZFormProps> = ({ onSubmit, isLoading }) => {
                                             />
                                         </div>
                                         <div>
-                                            <label className="block text-xs text-gray-500 mb-1">Point Size ({config.POINT_SIZE})</label>
+                                            <label className="block text-xs text-gray-500 mb-1">Size ({config.POINT_SIZE})</label>
                                             <input
                                                 type="range"
                                                 min="1"
@@ -253,7 +280,7 @@ const BZForm: React.FC<BZFormProps> = ({ onSubmit, isLoading }) => {
                                             />
                                         </div>
                                     </div>
-                                    <div className="grid grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 gap-4">
                                         <div>
                                             <label className="block text-xs text-gray-500 mb-1">Text Size ({config.TEXT_SIZE})</label>
                                             <input
@@ -286,7 +313,7 @@ const BZForm: React.FC<BZFormProps> = ({ onSubmit, isLoading }) => {
                         {/* Scene Settings */}
                         <div className="space-y-4 pt-4 border-t border-gray-50">
                             <div className="flex items-center justify-between">
-                                <label className="text-sm font-medium text-gray-700">Show Axes</label>
+                                <label className="text-sm font-medium text-gray-700">Axes</label>
                                 <input
                                     type="checkbox"
                                     checked={config.SHOW_AXES}
@@ -294,10 +321,10 @@ const BZForm: React.FC<BZFormProps> = ({ onSubmit, isLoading }) => {
                                     className="w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500"
                                 />
                             </div>
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 gap-4">
                                 {config.SHOW_AXES && (
                                     <div>
-                                        <label className="block text-xs text-gray-500 mb-1">Axes Factor ({config.AXES_FACTOR})</label>
+                                        <label className="block text-xs text-gray-500 mb-1">Factor ({config.AXES_FACTOR})</label>
                                         <input
                                             type="range"
                                             min="0.1"
@@ -309,7 +336,7 @@ const BZForm: React.FC<BZFormProps> = ({ onSubmit, isLoading }) => {
                                         />
                                     </div>
                                 )}
-                                <div className={`flex items-center justify-between pt-4 ${!config.SHOW_AXES ? 'col-span-2' : ''}`}>
+                                <div className="flex items-center justify-between pt-2">
                                     <label className="text-sm font-medium text-gray-700">Orthographic</label>
                                     <input
                                         type="checkbox"
@@ -322,23 +349,12 @@ const BZForm: React.FC<BZFormProps> = ({ onSubmit, isLoading }) => {
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <button
-                type="submit"
-                disabled={isLoading}
-                className={`w-full flex justify-center py-4 px-4 border border-transparent rounded-xl shadow-lg text-base font-bold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all transform active:scale-[0.98] ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
-            >
-                {isLoading ? (
-                    <span className="flex items-center">
-                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Generating...
-                    </span>
-                ) : 'Generate Visualization'}
-            </button>
+                {/* Column 3: Visualization */}
+                <div className="lg:col-span-6 h-full">
+                    {visualizer}
+                </div>
+            </div>
         </form>
     );
 };
