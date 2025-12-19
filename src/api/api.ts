@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://awesome-bz.delightfulpebble-4e97604d.centralindia.azurecontainerapps.io';
+// Use proxy in development to avoid CORS issues, use direct URL in production
+const API_BASE_URL = import.meta.env.DEV 
+    ? '/api' 
+    : 'https://awesome-bz.delightfulpebble-4e97604d.centralindia.azurecontainerapps.io';
 
 export interface VisualizationConfig {
     SHOW_FACES?: boolean;
