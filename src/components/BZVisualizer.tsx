@@ -59,7 +59,7 @@ const BZVisualizer: React.FC<BZVisualizerProps> = ({ plotData }) => {
                 format,
                 filename: `brillouin_zone_${new Date().getTime()}`,
                 scale: 3 // Use 3x scale for high quality while preserving aspect ratio
-            });
+            } as any);
         }
     };
 
