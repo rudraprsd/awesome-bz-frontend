@@ -4,6 +4,17 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  resolve: {
+    alias: {
+      'buffer/': 'buffer',
+      'stream': 'stream-browserify',
+      'assert': 'assert',
+    },
+  },
+  define: {
+    'global': 'window',
+    'process.env': {},
+  },
   server: {
     proxy: {
       '/api': {
@@ -27,7 +38,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          plotly: ['plotly.js-dist-min', 'react-plotly.js'],
+          plotly: ['plotly.js', 'react-plotly.js'],
         },
       },
     },

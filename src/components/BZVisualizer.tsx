@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useRef } from 'react';
 import type { ErrorInfo } from 'react';
 // @ts-ignore
-import Plotly from 'plotly.js-dist-min';
+import Plotly from 'plotly.js';
 import createPlotlyComponent from 'react-plotly.js/factory';
 
 const Plot = createPlotlyComponent(Plotly);
@@ -47,19 +47,24 @@ class PlotErrorBoundary extends React.Component<{ children: React.ReactNode }, {
 }
 
 const BZVisualizer: React.FC<BZVisualizerProps> = ({ plotData }) => {
-    const [graphDiv, setGraphDiv] = useState<any>(null);
+    const graphDivRef = useRef<any>(null);
 
     if (!plotData) {
         return null;
     }
 
-    const handleDownload = (format: 'png' | 'svg') => {
+    const handleDownload = async (format: 'png' | 'svg') => {
+        const graphDiv = graphDivRef.current;
         if (graphDiv) {
-            Plotly.downloadImage(graphDiv, {
-                format,
-                filename: `brillouin_zone_${new Date().getTime()}`,
-                scale: 3 // Use 3x scale for high quality while preserving aspect ratio
-            } as any);
+            try {
+                await Plotly.downloadImage(graphDiv, {
+                    format,
+                    filename: `brillouin_zone_${new Date().getTime()}`,
+                    scale: 3 // Use 3x scale for high quality while preserving aspect ratio
+                } as any);
+            } catch (err) {
+                console.error('Error downloading plot:', err);
+            }
         }
     };
 
@@ -117,8 +122,8 @@ const BZVisualizer: React.FC<BZVisualizerProps> = ({ plotData }) => {
                 <div className="flex-1 w-full h-full min-h-[700px]">
                     <Plot
                         data={plotData.data}
-                        onInitialized={(_, div) => setGraphDiv(div)}
-                        onUpdate={(_, div) => setGraphDiv(div)}
+                        onInitialized={(_, div) => { graphDivRef.current = div; }}
+                        onUpdate={(_, div) => { graphDivRef.current = div; }}
                         layout={{
                             ...plotData.layout,
                             uirevision: 'true', // Preserve user interaction state (camera, zoom, etc.)
