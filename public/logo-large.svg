@@ -1,0 +1,51 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="256" height="256" rx="48" fill="url(#gradient)"/>
+  <defs>
+    <linearGradient id="gradient" x1="0" y1="0" x2="256" y2="256" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="50%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#8b5cf6"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Crystal lattice structure with glow -->
+  <g stroke="white" stroke-width="6" fill="none" filter="url(#glow)">
+    <!-- Front face -->
+    <path d="M 80 96 L 128 72 L 176 96 L 128 120 Z" stroke-opacity="0.95" stroke-width="7"/>
+    <!-- Back face -->
+    <path d="M 80 152 L 128 128 L 176 152 L 128 176 Z" stroke-opacity="0.7" stroke-width="6"/>
+    <!-- Connecting edges -->
+    <line x1="80" y1="96" x2="80" y2="152" stroke-opacity="0.8" stroke-width="6"/>
+    <line x1="128" y1="72" x2="128" y2="128" stroke-opacity="0.95" stroke-width="7"/>
+    <line x1="176" y1="96" x2="176" y2="152" stroke-opacity="0.8" stroke-width="6"/>
+    <line x1="128" y1="120" x2="128" y2="176" stroke-opacity="0.7" stroke-width="6"/>
+  </g>
+  
+  <!-- Brillouin zone points with glow -->
+  <g filter="url(#glow)">
+    <circle cx="128" cy="72" r="10" fill="white" opacity="0.95"/>
+    <circle cx="80" cy="96" r="8" fill="white" opacity="0.85"/>
+    <circle cx="176" cy="96" r="8" fill="white" opacity="0.85"/>
+    <circle cx="128" cy="120" r="8" fill="white" opacity="0.8"/>
+    <circle cx="80" cy="152" r="7" fill="white" opacity="0.7"/>
+    <circle cx="176" cy="152" r="7" fill="white" opacity="0.7"/>
+    <circle cx="128" cy="176" r="7" fill="white" opacity="0.65"/>
+  </g>
+  
+  <!-- Subtle grid background for depth -->
+  <g stroke="white" stroke-opacity="0.1" stroke-width="1">
+    <line x1="64" y1="64" x2="192" y2="64"/>
+    <line x1="64" y1="128" x2="192" y2="128"/>
+    <line x1="64" y1="192" x2="192" y2="192"/>
+    <line x1="64" y1="64" x2="64" y2="192"/>
+    <line x1="128" y1="64" x2="128" y2="192"/>
+    <line x1="192" y1="64" x2="192" y2="192"/>
+  </g>
+</svg>

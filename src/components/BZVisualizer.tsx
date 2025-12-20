@@ -83,10 +83,15 @@ const BZVisualizer: React.FC<BZVisualizerProps> = ({ plotData }) => {
         <PlotErrorBoundary>
             <div className="w-full h-full min-h-[700px] relative group flex flex-col">
                 {/* Custom Export Controls - Permanent */}
-                <div className="absolute bottom-6 right-6 z-30 flex gap-2 transition-opacity duration-300">
+                <div className="absolute bottom-6 right-6 z-30 flex gap-2 transition-all duration-300">
                     <button
-                        onClick={() => handleDownload('png')}
-                        className="flex items-center gap-2 px-4 py-2 bg-white/95 backdrop-blur shadow-lg border border-slate-200 rounded-xl text-xs font-bold text-slate-700 hover:bg-indigo-600 hover:text-white hover:border-indigo-600 transition-all transform hover:-translate-y-0.5 active:translate-y-0"
+                        type="button"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleDownload('png');
+                        }}
+                        className="flex items-center gap-2 px-4 py-2.5 bg-white/95 backdrop-blur-xl shadow-xl shadow-indigo-200/30 border border-indigo-100 rounded-xl text-xs font-bold text-slate-700 hover:bg-gradient-to-r hover:from-indigo-600 hover:to-purple-600 hover:text-white hover:border-indigo-600 transition-all transform hover:-translate-y-1 hover:shadow-2xl hover:shadow-indigo-300/40 active:translate-y-0 ring-1 ring-slate-200/50"
                         title="Download as PNG"
                     >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -95,8 +100,13 @@ const BZVisualizer: React.FC<BZVisualizerProps> = ({ plotData }) => {
                         PNG
                     </button>
                     <button
-                        onClick={() => handleDownload('svg')}
-                        className="flex items-center gap-2 px-4 py-2 bg-white/95 backdrop-blur shadow-lg border border-slate-200 rounded-xl text-xs font-bold text-slate-700 hover:bg-indigo-600 hover:text-white hover:border-indigo-600 transition-all transform hover:-translate-y-0.5 active:translate-y-0"
+                        type="button"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleDownload('svg');
+                        }}
+                        className="flex items-center gap-2 px-4 py-2.5 bg-white/95 backdrop-blur-xl shadow-xl shadow-indigo-200/30 border border-indigo-100 rounded-xl text-xs font-bold text-slate-700 hover:bg-gradient-to-r hover:from-indigo-600 hover:to-purple-600 hover:text-white hover:border-indigo-600 transition-all transform hover:-translate-y-1 hover:shadow-2xl hover:shadow-indigo-300/40 active:translate-y-0 ring-1 ring-slate-200/50"
                         title="Download as SVG"
                     >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
