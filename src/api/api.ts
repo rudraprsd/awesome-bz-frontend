@@ -15,6 +15,7 @@ export interface VisualizationConfig {
     PATH_COLOR?: string;
     PATH_WIDTH?: number;
     SHOW_POINTS?: boolean;
+    SHOW_TEXT?: boolean;
     POINT_COLOR?: string;
     POINT_SIZE?: number;
     TEXT_SIZE?: number;

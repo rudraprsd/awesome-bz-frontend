@@ -9,9 +9,9 @@ interface BZFormProps {
 }
 
 const BZForm: React.FC<BZFormProps> = ({ onSubmit, isLoading, visualizer, error }) => {
-    const [latticeVectors, setLatticeVectors] = useState<string>('[[0, 0.5, 0.5], [0.5, 0, 0.5], [0.5, 0.5, 0]]');
-    const [kpoints, setKpoints] = useState<string>('{"GAMMA": [0, 0, 0], "X": [0.5, 0, 0.5], "L": [0.5, 0.5, 0.5], "W": [0.5, 0.25, 0.75], "K": [0.375, 0.375, 0.75]}');
-    const [path, setPath] = useState<string>('["GAMMA", "X", "W", "L", "GAMMA", "K"]');
+    const [latticeVectors, setLatticeVectors] = useState<string>('[[4.18, 0, 0], [-2.094, 3.62, 0.5], [0, 0, 8]]');
+    const [kpoints, setKpoints] = useState<string>('{"G": [0, 0, 0], "M": [0.5, 0, 0], "K": [0.33, 0.33, 0], "A": [0, 0, 0.5], "L": [0.5, 0, 0.5], "H": [0.33, 0.33, 0.5]}');
+    const [path, setPath] = useState<string>('["G", "M", "K", "G", "A", "L", "H", "A"]');
     const [config, setConfig] = useState<VisualizationConfig>({
         SHOW_FACES: true,
         FACE_COLOR: '#add8e6',
@@ -22,6 +22,7 @@ const BZForm: React.FC<BZFormProps> = ({ onSubmit, isLoading, visualizer, error 
         PATH_COLOR: '#ff0000',
         PATH_WIDTH: 5.0,
         SHOW_POINTS: true,
+        SHOW_TEXT: true,
         POINT_COLOR: '#ff0000',
         POINT_SIZE: 6.0,
         TEXT_SIZE: 22.0,
@@ -78,7 +79,7 @@ const BZForm: React.FC<BZFormProps> = ({ onSubmit, isLoading, visualizer, error 
                             value={kpoints}
                             onChange={(e) => setKpoints(e.target.value)}
                             className="w-full p-3 bg-slate-50/50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 h-32 font-mono text-sm transition-all resize-none shadow-sm hover:shadow-md"
-                            placeholder='{"GAMMA": [0,0,0], ...}'
+                            placeholder='{"G": [0,0,0], ...}'
                         />
                     </div>
 
@@ -89,7 +90,7 @@ const BZForm: React.FC<BZFormProps> = ({ onSubmit, isLoading, visualizer, error 
                             value={path}
                             onChange={(e) => setPath(e.target.value)}
                             className="w-full p-3 bg-slate-50/50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 font-mono text-sm transition-all shadow-sm hover:shadow-md"
-                            placeholder='["GAMMA", "X", ...]'
+                            placeholder='["G", "X", ...]'
                         />
                     </div>
 
@@ -299,6 +300,15 @@ const BZForm: React.FC<BZFormProps> = ({ onSubmit, isLoading, visualizer, error 
                                     </div>
                                     {config.SHOW_POINTS && (
                                         <div className="space-y-3 p-3 bg-white/50 rounded-lg border border-slate-100 shadow-sm">
+                                            <div className="flex items-center justify-between">
+                                                <label className="text-xs font-medium text-slate-500">Show Labels</label>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={config.SHOW_TEXT}
+                                                    onChange={(e) => updateConfig('SHOW_TEXT', e.target.checked)}
+                                                    className="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500 border-slate-300"
+                                                />
+                                            </div>
                                             <div className="flex items-center gap-2">
                                                 <label className="text-xs font-medium text-slate-500 min-w-[60px]">Color</label>
                                                 <input

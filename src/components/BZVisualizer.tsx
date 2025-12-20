@@ -58,9 +58,7 @@ const BZVisualizer: React.FC<BZVisualizerProps> = ({ plotData }) => {
             Plotly.downloadImage(graphDiv, {
                 format,
                 filename: `brillouin_zone_${new Date().getTime()}`,
-                height: 1200,
-                width: 1200,
-                scale: 2
+                scale: 3 // Use 3x scale for high quality while preserving aspect ratio
             });
         }
     };
@@ -123,6 +121,7 @@ const BZVisualizer: React.FC<BZVisualizerProps> = ({ plotData }) => {
                         onUpdate={(_, div) => setGraphDiv(div)}
                         layout={{
                             ...plotData.layout,
+                            uirevision: 'true', // Preserve user interaction state (camera, zoom, etc.)
                             autosize: true,
                             margin: { l: 0, r: 0, b: 0, t: 0 },
                             paper_bgcolor: 'rgba(0,0,0,0)',
