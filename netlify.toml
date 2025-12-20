@@ -1,0 +1,10 @@
+[[redirects]]
+  from = "/api/*"
+  to = "https://awesome-bz.delightfulpebble-4e97604d.centralindia.azurecontainerapps.io/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

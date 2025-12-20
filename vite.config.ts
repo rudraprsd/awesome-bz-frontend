@@ -13,6 +13,15 @@ export default defineConfig({
       },
     },
   },
+  preview: {
+    proxy: {
+      '/api': {
+        target: 'https://awesome-bz.delightfulpebble-4e97604d.centralindia.azurecontainerapps.io',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
+  },
   build: {
     chunkSizeWarningLimit: 1600,
     rollupOptions: {

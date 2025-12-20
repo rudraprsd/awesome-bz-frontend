@@ -1,9 +1,10 @@
 import axios from 'axios';
 
-// Use proxy in development to avoid CORS issues, use direct URL in production
-const API_BASE_URL = import.meta.env.DEV 
-    ? '/api' 
-    : 'https://awesome-bz.delightfulpebble-4e97604d.centralindia.azurecontainerapps.io';
+// Use relative path /api for all environments.
+// - In Dev: Vite 'server.proxy' handles it.
+// - In Preview: Vite 'preview.proxy' handles it.
+// - In Netlify: 'netlify.toml' redirects handle it.
+const API_BASE_URL = '/api';
 
 export interface VisualizationConfig {
     SHOW_FACES?: boolean;
