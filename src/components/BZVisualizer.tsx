@@ -57,11 +57,22 @@ const BZVisualizer: React.FC<BZVisualizerProps> = ({ plotData }) => {
         const graphDiv = graphDivRef.current;
         if (graphDiv) {
             try {
-                await Plotly.downloadImage(graphDiv, {
+                // Use toImage to capture the current state (including camera position)
+                // and manually trigger download. This is more reliable on mobile devices
+                // than Plotly.downloadImage which sometimes reverts to initial state.
+                const url = await Plotly.toImage(graphDiv, {
                     format,
-                    filename: `brillouin_zone_${new Date().getTime()}`,
-                    scale: 3 // Use 3x scale for high quality while preserving aspect ratio
-                } as any);
+                    height: graphDiv.clientHeight,
+                    width: graphDiv.clientWidth,
+                    scale: 3
+                });
+
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `brillouin_zone_${new Date().getTime()}.${format}`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
             } catch (err) {
                 console.error('Error downloading plot:', err);
             }
