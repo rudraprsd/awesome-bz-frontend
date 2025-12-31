@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://awesome-bz.netlify.app/sitemap.xml
